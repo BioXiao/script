@@ -1,0 +1,6 @@
+# Do not check files with a ~ at the end, temporary save by emacs
+*
+!*.*
+*~
+muscle3.8.31_i86darwin64
+
