@@ -1,10 +1,21 @@
 #!/bin/bash
+### Usage : monJoin.sh fichier1 fichier2
 
-tmp1='/tmp/'$(echo $1 | awk -F'/' '{print $NF}')'.tmp'
-tmp2='/tmp/'$(echo $2 | awk -F'/' '{print $NF}')'.tmp'
+if [ $# -ne 2 ]
+then
+    echo "Usage : monJoin.sh fichier1 fichier2"
+    exit
+fi
 
-sort -k 1,b1 $1 | tee tmp1 > /dev/null
-sort -k 1,b1 $2 | tee tmp2 > /dev/null
-join tmp1 tmp2 | tee $3 > /dev/null
+in1=$1
+in2=$2
+sep=$3
 
-rm -f tmp1 tmp2
+tmp1='/tmp/'$(echo $in1 | awk -F'/' '{print $NF}')'.tmp'
+tmp2='/tmp/'$(echo $in2 | awk -F'/' '{print $NF}')'.tmp'
+
+sort -k 1b,1 $in1 | tee $tmp1 > /dev/null
+sort -k 1b,1 $in2 | tee $tmp2 > /dev/null
+join $tmp1 $tmp2
+
+rm -f $tmp1 $tmp2
