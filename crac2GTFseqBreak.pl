@@ -98,7 +98,7 @@ while(<CRACFILE>)
 	    ### Print the GTF output
 	    if(defined $expId)
 	    {
-		print OUTFILE "$chr\tcrac\tfusion\t$start\t$end\t.\t$str\t.\tgene_id \"$ids[$geneNum]\"; transcript_id \"$ids[0]/$ids[1]_$expId_$break\"; fusion_id \"$ids[0]/$ids[1]\"; experiment_id \"$expId\"; gene_pos \"$genePos\"; break_value \"$break\";\n";
+		print OUTFILE "$chr\tcrac\tfusion\t$start\t$end\t.\t$str\t.\tgene_id \"$ids[$geneNum]\"; transcript_id \"$ids[0]/$ids[1]_".$expId."_$break\"; fusion_id \"$ids[0]/$ids[1]\"; experiment_id \"$expId\"; gene_pos \"$genePos\"; break_value \"$break\";\n";
 	    }
 	    else
 	    {
