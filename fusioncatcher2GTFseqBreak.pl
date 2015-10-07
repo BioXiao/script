@@ -85,7 +85,7 @@ while(<FCFILE>)
 	}
 	else
 	{
-	    print OUTFILE "$chr\tfusioncatcher\texon\t$start\t$end\t.\t$str\t.\tgene_id \"$ids[$geneNum]\"; transcript_id \"$ids[0]/$ids[1]_$expId_$line[8]/$line[9]\"; fusion_id \"$ids[0]/$ids[1]\"; gene_pos \"$genePos\"; break_value \"$line[8]/$line[9]\";\n";
+	    print OUTFILE "$chr\tfusioncatcher\texon\t$start\t$end\t.\t$str\t.\tgene_id \"$ids[$geneNum]\"; transcript_id \"$ids[0]/$ids[1]_$line[8]/$line[9]\"; fusion_id \"$ids[0]/$ids[1]\"; gene_pos \"$genePos\"; break_value \"$line[8]/$line[9]\";\n";
 	}
 
 	$geneNum = $geneNum + 1;

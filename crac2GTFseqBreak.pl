@@ -102,7 +102,7 @@ while(<CRACFILE>)
 	    }
 	    else
 	    {
-		print OUTFILE "$chr\tcrac\tfusion\t$start\t$end\t.\t$str\t.\tgene_id \"$ids[$geneNum]\"; transcript_id \"$ids[0]/$ids[1]_$expId_$break\"; fusion_id \"$ids[0]/$ids[1]\"; gene_pos \"$genePos\"; break_value \"$break\";\n";
+		print OUTFILE "$chr\tcrac\tfusion\t$start\t$end\t.\t$str\t.\tgene_id \"$ids[$geneNum]\"; transcript_id \"$ids[0]/$ids[1]_$break\"; fusion_id \"$ids[0]/$ids[1]\"; gene_pos \"$genePos\"; break_value \"$break\";\n";
 	    }
 	    
 	    $geneNum = $geneNum + 1;
