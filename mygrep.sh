@@ -3,5 +3,5 @@
 regexp=$1
 file=$2
 
-awk -v reg=$regexp '$0~/reg/' $1
+awk '$0~/'$regexp'/' $file
 
