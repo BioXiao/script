@@ -9,5 +9,5 @@ fi
 
 in=$1
 
-awk 'BEGIN{OFS="\n"} {print $1, $2}' $in
+awk -F"\t" 'BEGIN{OFS="\n"} {print $1, $2}' $in
 

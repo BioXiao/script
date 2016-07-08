@@ -4,7 +4,7 @@
 #####################################################################
 # TD, May 2014
 # tderrien@univ-rennes1.fr
-# 
+#
 # Aims :
 #	- 4Mathieu :)
 #	- Format a gtf to a gff3 suitable for CRAC
@@ -30,9 +30,9 @@ my $man;
 my $result = GetOptions(
 	"infile|i=s"		=> \$infile,
 	"verbosity|v=i"	=> \$verbosity,
-	"man|m"			=> \$man,	
+	"man|m"			=> \$man,
 	"help|h"		=> \$help);
-	
+
 
 # Print help if needed
 pod2usage(1) if $help;
@@ -57,10 +57,10 @@ if ($verbosity > 0){
 
 	print STDERR "Parse Gtf file\n";
 }
-my $refh              = Parser::parseGTFgene($infile, 'exon,CDS',  0, "", $verbosity);
+my $refh              = Parser::parseGTFgene($infile, 'exon,CDS',  0, undef, $verbosity);
 
 #   print Dumper $refh;
-# 
+#
 # die;
 
 print "##gff-version 3\n";
@@ -69,15 +69,15 @@ for my $gn (keys %{$refh}){
 
 	# compute the number of Tx per locus/gene
 	my $nb_tx = scalar keys %{$refh->{$gn}->{'transcript_id'}};
-	
+
 	my $counttx=0;
-	
+
 	# Need to go through all tx (but not all exons fetures=> [0]) to have the matching genes
 	my %gnmatch;
 	foreach my $tr (keys %{$refh->{$gn}->{'transcript_id'}}) {
 
 		my $reftx 		= $refh->{$gn}->{'transcript_id'}->{$tr};
-		
+
 		if (exists $reftx->{"feature"}->[0]->{'matchEns75Gn100'} && $reftx->{"feature"}->[0]->{'matchEns75Gn100'} ne "NA"){
 			my $gn = $reftx->{"feature"}->[0]->{'matchEns75Gn100'};
 			$gnmatch{$gn}++;
@@ -92,50 +92,50 @@ for my $gn (keys %{$refh}){
 	} else {
 		$gnmatch = "NA";
 	}
-	
+
 	# Go through each txs
 	foreach my $tr (keys %{$refh->{$gn}->{'transcript_id'}}) {
 
 		my $reftx 		= $refh->{$gn}->{'transcript_id'}->{$tr};
-		
+
 		$counttx++;
-		
+
 
  		# Only print gene level for the first tx
 		if ($counttx ==1){
 			if (exists $reftx->{"feature"}->[0]->{'matchEns75Gn100'}){
 				# print *gene* level
 				print join("\t",$refh->{$gn}->{"chr"}, $refh->{$gn}->{"source"}, "gene", $refh->{$gn}->{"startg"}, $refh->{$gn}->{"endg"}, $refh->{$gn}->{"score"}, $refh->{$gn}->{"strand"}, ".");
-				print "\tID=$gn;Name=$gn;transcripts_nb=$nb_tx;matchEns75Gn100=$gnmatch\n";	
+				print "\tID=$gn;Name=$gn;transcripts_nb=$nb_tx;matchEns75Gn100=$gnmatch\n";
 			} else{
 				print join("\t",$refh->{$gn}->{"chr"}, $refh->{$gn}->{"source"}, "gene", $refh->{$gn}->{"startg"}, $refh->{$gn}->{"endg"}, $refh->{$gn}->{"score"}, $refh->{$gn}->{"strand"}, ".");
-				print "\tID=$gn\n";					
+				print "\tID=$gn\n";
 			}
-		}		
-		
+		}
+
 		my $txmatch	=	$reftx->{"feature"}->[0]->{'matchEns75Tx100'} if (exists $reftx->{"feature"}->[0]->{'matchEns75Tx100'});
-		
+
 		my $exons_nb_tx	= scalar @{$reftx->{"feature"}};
 		my $type_tx = "NA";
-		
+
 		my $desc = getMainType($reftx->{"feature"}->[0]->{'transcript_biotype'});
-		
+
 		# print *mRNA* level -> add main_type:sub_type
 		if (exists $reftx->{"feature"}->[0]->{'matchEns75Tx100'}){
 			print join("\t",$reftx->{"chr"}, $reftx->{"source"}, "mRNA", $reftx->{"startt"}, $reftx->{"endt"}, $reftx->{"score"}, $reftx->{"strand"}, ".");
 			print "\tID=$tr;Parent=$gn;exons_nb=$exons_nb_tx;type=$desc;matchEns75Tx100=$txmatch\n";
 		}else{
 			print join("\t",$reftx->{"chr"}, $reftx->{"source"}, "mRNA", $reftx->{"startt"}, $reftx->{"endt"}, $reftx->{"score"}, $reftx->{"strand"}, ".");
-			print "\tID=$tr;Parent=$gn;exons_nb=$exons_nb_tx;\n";		
-# 			print "\tID=$tr;Parent=$gn\n";		
+			print "\tID=$tr;Parent=$gn;exons_nb=$exons_nb_tx;\n";
+# 			print "\tID=$tr;Parent=$gn\n";
 
 		}
-		
+
 		my $exon_rank=0;
 		my $cds_rank=0;
-		
+
 		foreach my $feat1 (@{$reftx->{"feature"}}) {
-		
+
 			# print *exon* level
 			if ($feat1->{"feat_level"} eq "exon") {
 				$exon_rank++;
@@ -150,27 +150,27 @@ for my $gn (keys %{$refh}){
 			} else {
 				die "Feat level not known in gtf2gff.pl...\n"
 			}
-		
+
 		}
 	}
-}		
+}
 
 sub getMainType {
 
 	my ($tx_biotype)	=	@_;
-	my $desc = "NONE" ; 
+	my $desc = "NONE" ;
 	if (defined $tx_biotype){
 		#protein coding part
-		if ($tx_biotype eq "protein_coding" || $tx_biotype eq "pseudogene" 
-			|| $tx_biotype =~ /IG_C/i || $tx_biotype =~ /IG_V/i 
+		if ($tx_biotype eq "protein_coding" || $tx_biotype eq "pseudogene"
+			|| $tx_biotype =~ /IG_C/i || $tx_biotype =~ /IG_V/i
 			|| $tx_biotype =~ /TR_V/i || $tx_biotype =~ /TR_C/i
 			|| $tx_biotype =~ /TR_J/i || $tx_biotype =~ /IG_D/i
 			|| $tx_biotype =~ /IG_J/i || $tx_biotype =~ /TR_D/i
 			|| $tx_biotype eq "polymorphic_pseudogene"){
 			$desc = "protein_coding:".$tx_biotype;
-		}elsif ($tx_biotype eq "miRNA" || $tx_biotype eq "miRNA_pseudogene" 
-			|| $tx_biotype eq "snRNA" || $tx_biotype eq "snRNA_pseudogene" 
-			|| $tx_biotype eq "snoRNA" || $tx_biotype eq "snoRNA_pseudogene" 
+		}elsif ($tx_biotype eq "miRNA" || $tx_biotype eq "miRNA_pseudogene"
+			|| $tx_biotype eq "snRNA" || $tx_biotype eq "snRNA_pseudogene"
+			|| $tx_biotype eq "snoRNA" || $tx_biotype eq "snoRNA_pseudogene"
 			|| $tx_biotype eq "rRNA" || $tx_biotype eq "rRNA_pseudogene"
 			|| $tx_biotype eq "Mt_rRNA" || $tx_biotype eq "Mt_rRNA_pseudogene"
 			|| $tx_biotype eq "Mt_tRNA" || $tx_biotype eq "Mt_tRNA_pseudogene"
@@ -184,13 +184,13 @@ sub getMainType {
 		}elsif ($tx_biotype eq "antisense" || $tx_biotype eq "sense_intronic"
 			|| $tx_biotype eq "processed_transcript"){
 			$desc = "other_lncRNA:".$tx_biotype;
-		}elsif ($tx_biotype =~ /non_coding/ 
+		}elsif ($tx_biotype =~ /non_coding/
 			|| $tx_biotype eq "misc_RNA" || $tx_biotype eq "misc_RNA_pseudogene"
 			|| $tx_biotype eq "ncrna_host" || $tx_biotype eq "sense_overlapping"
 			|| $tx_biotype eq "retained_intron"
 			|| $tx_biotype eq "processed_pseudogene" || $tx_biotype eq "unprocessed_pseudogene"
-			|| $tx_biotype eq "transcribed_processed_pseudogene" 
-			|| $tx_biotype eq "transcribed_unprocessed_pseudogene" 
+			|| $tx_biotype eq "transcribed_processed_pseudogene"
+			|| $tx_biotype eq "transcribed_unprocessed_pseudogene"
 			|| $tx_biotype eq "retrotransposed" || $tx_biotype eq "unitary_pseudogene"
 			){
 			$desc = "other_noncodingRNA:".$tx_biotype;
@@ -220,7 +220,7 @@ HSCHR6_MHC_MANN Ensembl_CORE    exon    30051790        30051922        .       
 
 =head1 SYNOPSIS
 
-perl gtf2gff3_v2.pl -infile <gtf file> [Options] 
+perl gtf2gff3_v2.pl -infile <gtf file> [Options]
 
 
 Options:
@@ -229,9 +229,9 @@ Options:
 
 	-man		: man help
 
-	-verbosity	: level of verbosity 
+	-verbosity	: level of verbosity
 
-	
+
 =head1 OPTIONS
 
 =over 8
